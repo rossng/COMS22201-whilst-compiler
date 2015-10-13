@@ -77,22 +77,38 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
 
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-
-                    <archive>
-                        <manifest>
-                            <mainClass>uk.ac.bris.cs.camle.Camle</mainClass>
-                        </manifest>
-                    </archive>
-
-                </configuration>
-
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>make-antlr3-assembly</id>
+                        <configuration>
+                            <finalName>antlr3-camle</finalName>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>uk.ac.bris.cs.camle.Camle</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>make-antlr4-assembly</id>
+                        <configuration>
+                            <finalName>antlr4-camle</finalName>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>eu.rossng.camle.Camle</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
                         <phase>package</phase>
                         <goals>
                             <goal>attached</goal>

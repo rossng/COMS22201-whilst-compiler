@@ -17,7 +17,7 @@ And the wrapper will do everything for you. There is no need to install Maven or
 Once packaged, you can test the compiler skeleton by running:
 
 ```
- java -jar target/camle-maven-1.0-SNAPSHOT-jar-with-dependencies.jar -lex src/test/while/testsk.w
+ java -jar target/antlr3-camle-jar-with-dependencies.jar -lex src/test/while/testsk.w
 ```
 
 This executes the `uk.ac.bris.cs.camle.Camle` class, asking it to lex the `testsk.w` test program. The subset of the language in `testsk.w` *is* implemented already, so this will output something like:
@@ -40,3 +40,11 @@ This executes the `uk.ac.bris.cs.camle.Camle` class, asking it to lex the `tests
 You can also supply other flags - `-syn` and `-irt`.
 
 When completed, the compiler should be able to lex, parse and compile `test0.w`.
+
+## Future development
+
+I am currently updating the skeleton to use ANTLR4 - you can try a basic version with
+
+```
+ java -jar target/antlr4-camle-jar-with-dependencies.jar -syn src/test/while/testsk.w
+```
