@@ -2,6 +2,7 @@ package eu.rossng.camle;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.lang.reflect.Array;
@@ -41,7 +42,23 @@ public class Camle {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             SynParser parser = new SynParser(tokens);
             ParseTree tree = parser.program();
-            System.out.println(tree.toStringTree(parser));
+
+            switch (opt) {
+                case "-lex":
+                    Token T;
+                    T = lexer.nextToken();
+                    while (T.getType() != -1) {
+                        System.out.println(T.getType() + " \"" + T.getText() + "\"");
+                        T = lexer.nextToken();
+                    }
+                    System.exit(0);
+                case "-syn":
+                    System.out.println(tree.toStringTree(parser));
+                    System.exit(0);
+                default:
+                    System.out.println("Support for -irt has not yet been implemented.");
+                    System.exit(0);
+            }
         } catch (Exception e) {
             System.out.print(e.getLocalizedMessage());
             System.exit(1);
