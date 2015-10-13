@@ -21,17 +21,23 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.5.1</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
 
         <defaultGoal>install</defaultGoal>
-        <sourceDirectory>src</sourceDirectory>
+        <sourceDirectory>src/main/java</sourceDirectory>
 
         <plugins>
 
             <plugin>
-
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr3-maven-plugin</artifactId>
                 <version>3.5.2</version>
@@ -42,7 +48,21 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
 
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.5.1</version>
+                <configuration>
+                    <listener>true</listener>
+                    <visitor>true</visitor>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals><goal>antlr4</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -55,7 +75,6 @@
             </plugin>
 
             <plugin>
-
                 <artifactId>maven-assembly-plugin</artifactId>
 
                 <configuration>
@@ -80,7 +99,6 @@
                         </goals>
                     </execution>
                 </executions>
-
             </plugin>
 
         </plugins>
