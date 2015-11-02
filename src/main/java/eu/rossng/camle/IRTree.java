@@ -1,13 +1,13 @@
-package eu.rossng.camle;// COMS22201: IR tree
+package eu.rossng.camle;
 
-import java.util.*;
+import java.util.ArrayList;
 
 class IRTree
 {
   private String op;
   private ArrayList<IRTree> sub;
 
-// Constructors for IR tree nodes with various numbers of subtrees
+  // Constructors for IR tree nodes with various numbers of subtrees
 
   public IRTree()
   {

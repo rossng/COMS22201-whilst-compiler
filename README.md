@@ -1,4 +1,4 @@
-# camle-maven
+# Whilst Compiler - CAMLE
 
 A port of the University of Bristol CAMLE (Compiler to Abstract Machine for Language Engineering) to a standard Maven project format.
 
