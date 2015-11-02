@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.rossng</groupId>
-    <artifactId>camle-maven</artifactId>
-    <name>camle-maven</name>
+    <artifactId>whilst-compiler</artifactId>
+    <name>whilst-compiler</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
