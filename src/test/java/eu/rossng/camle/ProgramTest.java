@@ -23,7 +23,7 @@ public class ProgramTest {
                         .map(p -> {
                             System.out.println("Parsing " + p.a.getName());
                             Optional<Boolean> isProgramParseable = p.b.flatMap(this::isProgramParseable);
-                            System.out.println("Parseable? " + isProgramParseable.orElse(false));
+                            System.out.println(isProgramParseable.orElse(false) ? "Parseable" : "Not parseable");
                             System.out.println();
                             return new Pair<>(p.a, isProgramParseable);
                         })
@@ -41,9 +41,9 @@ public class ProgramTest {
     }
 
     private Optional<Boolean> isProgramParseable(CharStream program) {
-        SynLexer lexer = new SynLexer(program);
+        WhilstLexer lexer = new WhilstLexer(program);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        SynParser parser = new SynParser(tokens);
+        WhilstParser parser = new WhilstParser(tokens);
         ErrorListener errorListener = new ErrorListener();
         parser.addErrorListener(errorListener);
         ParseTree tree = parser.program();
