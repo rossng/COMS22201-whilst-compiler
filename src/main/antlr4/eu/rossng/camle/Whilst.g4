@@ -63,23 +63,7 @@ SEMICOLON  : ';' ;
 OPENPAREN  : '(' ;
 CLOSEPAREN : ')' ;
 
-// IDENTIFIERS
-ID         : [a-zA-Z] [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? ;
-
-// LITERALS
-INTNUM     : [0-9]+ ;
-
-STRING     : '\'' ('\'' '\'' | ~'\'')* '\'';
-
-COMMENT    : '{' (~'}')* '}' -> skip ;
-
-WS         : (' ' | '\t' | '\r' | '\n' )+ -> skip ;
-
-FALSE      : 'false' ;
-TRUE       : 'true' ;
-
 // OPERATORS
-
 AND        : '&' ;
 NOT        : '!' ;
 EQUAL      : '=' ;
@@ -88,3 +72,18 @@ PLUS       : '+' ;
 MINUS      : '-' ;
 TIMES      : '*' ;
 ASSIGN     : ':=' ;
+
+// LITERALS
+FALSE      : 'false' ;
+TRUE       : 'true' ;
+
+// OTHER
+ID         : [a-zA-Z] [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? [a-zA-Z0-9]? ;
+
+INTNUM     : [0-9]+ ;
+
+STRING     : '\'' ('\'' '\'' | ~'\'')* '\'';
+
+COMMENT    : '{' (~'}')* '}' -> skip ;
+
+WS         : (' ' | '\t' | '\r' | '\n' )+ -> skip ;
