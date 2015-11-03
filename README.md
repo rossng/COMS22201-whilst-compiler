@@ -20,7 +20,7 @@ Once packaged, you can test the compiler skeleton by running:
  java -jar target/antlr3-camle-jar-with-dependencies.jar -lex src/test/while/testsk.w
 ```
 
-This executes the `uk.ac.bris.cs.camle.Camle` class, asking it to lex the `testsk.w` test program. The subset of the language in `testsk.w` *is* implemented already, so this will output something like:
+This executes the `uk.ac.bris.cs.eu.rossng.camle.Camle` class, asking it to lex the `testsk.w` test program. The subset of the language in `testsk.w` *is* implemented already, so this will output something like:
 
 ```
 10 "write"         

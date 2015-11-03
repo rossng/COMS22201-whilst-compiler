@@ -9,6 +9,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <kotlin.version>1.0.0-beta-1103</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -34,12 +35,19 @@
             <version>4.12</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
 
         <defaultGoal>install</defaultGoal>
-        <sourceDirectory>src/main/java</sourceDirectory>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
 
         <plugins>
 
@@ -76,6 +84,26 @@
                 <executions>
                     <execution>
                         <goals><goal>antlr4</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>${kotlin.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals> <goal>compile</goal> </goals>
+                    </execution>
+
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>process-test-sources</phase>
+                        <goals> <goal>test-compile</goal> </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -120,7 +148,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>eu.rossng.camle.Camle</mainClass>
+                                    <mainClass>eu.rossng.camle.CamleKt</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
