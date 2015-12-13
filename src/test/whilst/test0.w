@@ -1,6 +1,4 @@
-{COMS22201 test0: program to test lexical and syntax analysis.}
-{This program is not expected to be runnable!}
-
+{test0: program to test lexical and syntax analysis.}
 read(max);
 write(max);
 writeln;
@@ -28,7 +26,7 @@ else (
 );
 while i1 <= limit & ! i1 = limit
 do (
-  if i1 = i2
+  if (i1 = i2)
   then
     write('yes')
   else

@@ -1,4 +1,7 @@
 package eu.rossng.camle.ir
 
-class SeqStmNode {
+class SeqStmNode(val statements: List<IRNode>) : IRNode {
+    override fun getSub(i: Int): IRNode {
+        return statements[i];
+    }
 }
