@@ -21,6 +21,11 @@ internal class WhilstFileVisitor : WhilstBaseVisitor<IRNode>() {
         return WriteNode(visit(ctx.exp()))
     }
 
+    override fun visitStatementWriteString(ctx: WhilstParser.StatementWriteStringContext): IRNode {
+
+        return WriteStringNode(visit(ctx.))
+    }
+
     override fun visitExpIntNum(ctx: WhilstParser.ExpIntNumContext): IRNode {
         return ConstNode(Integer.parseInt(ctx.INTNUM().text))
     }

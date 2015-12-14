@@ -70,7 +70,7 @@ fun main(args: Array<String>) {
                 val irTree = whilstVisitor.visit(tree)
                 val memory = Memory()
                 val outputStream = PrintStream(FileOutputStream("out.ass"))
-                val irVisitor = IRTreeVisitor(outputStream, memory)
+                val irVisitor = JouetteAsmGenerator(outputStream, memory)
                 irVisitor.visit(irTree)
                 outputStream.close()
             }
