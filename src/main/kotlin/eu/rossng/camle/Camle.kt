@@ -3,6 +3,9 @@ package eu.rossng.camle
 import org.antlr.v4.runtime.ANTLRFileStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Token
+import java.io.FileOutputStream
+import java.io.OutputStream
+import java.io.PrintStream
 
 /**
  * A compiler for the Whilst language, built for COMS22201 at the University of Bristol.
@@ -27,7 +30,7 @@ fun main(args: Array<String>) {
         println("Where <jar> executes the CAMLE jar, for example:")
         println(" java -jar target/antlr4-camle-jar-with-dependencies.jar")
         println()
-        println("And where <option> is one of:\n -lex, -syn, -irt")
+        println("And where <option> is one of:\n -lex, -syn, -irt, -cg")
         println()
         println("And where filename is the name of a file containing Whilst source code")
         System.exit(1)
@@ -60,6 +63,16 @@ fun main(args: Array<String>) {
                 val irTree = whilstVisitor.visit(tree)
                 System.out.println(irTree)
                 System.exit(0)
+            }
+            "-cg" -> {
+                val tree = parser.program()
+                val whilstVisitor = WhilstFileVisitor()
+                val irTree = whilstVisitor.visit(tree)
+                val memory = Memory()
+                val outputStream = PrintStream(FileOutputStream("out.ass"))
+                val irVisitor = IRTreeVisitor(outputStream, memory)
+                irVisitor.visit(irTree)
+                outputStream.close()
             }
             else -> {
                 println("Please provide valid arguments: -lex, -syn or -irt.")

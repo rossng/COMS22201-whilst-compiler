@@ -1,5 +1,8 @@
 package eu.rossng.camle.ir
 
+import eu.rossng.camle.IRTreeVisitor
+import eu.rossng.camle.jouette.JouetteNode
+
 interface IRNode {
-    fun getSub(i: Int): IRNode;
+    abstract fun accept(visitor: IRTreeVisitor) : JouetteNode
 }

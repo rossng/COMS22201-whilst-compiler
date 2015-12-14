@@ -173,3 +173,4 @@ Makefile.in
 
 # Un-ignore maven wrapper
 !maven-wrapper.jar
+.vagrant/

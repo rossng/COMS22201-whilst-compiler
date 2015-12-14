@@ -1,11 +1,9 @@
 package eu.rossng.camle
 
-import org.junit.Test
 import org.junit.Assert
-import java.io.BufferedReader
+import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import kotlin.test.assertEquals
 
 class MemoryTest {
     @Test
