@@ -3,7 +3,8 @@ grammar Whilst;
 program     : statements
             ;
 
-statements  : statement ( SEMICOLON statement )*
+statements  : statement SEMICOLON statements                                    # StatementsSequence
+            | statement                                                         # StatementsSingle
             ;
 
 statement   : ID ASSIGN exp                                                     # StatementAssign

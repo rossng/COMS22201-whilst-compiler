@@ -1,1 +1,2 @@
-write(5)
+write(5);
+write('hi')
