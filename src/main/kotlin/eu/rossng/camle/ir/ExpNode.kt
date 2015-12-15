@@ -31,7 +31,7 @@ public abstract class ExpNode private constructor() : IRNode {
         }
     }
 
-    class Binop(val op: Binop, val left: ExpNode, val right: ExpNode) : ExpNode() {
+    class Binop(val op: Binops, val left: ExpNode, val right: ExpNode) : ExpNode() {
         override fun <T> match(a: (Const) -> T, b: (Name) -> T, c: (Temp) -> T,
                                d: (Binop) -> T, e: (Mem) -> T, f: (Eseq) -> T): T {
             return d.invoke(this)

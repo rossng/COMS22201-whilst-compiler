@@ -60,7 +60,7 @@ fun main(args: Array<String>) {
             "-irt" -> {
                 val tree = parser.program()
                 val memory = Memory()
-                val whilstVisitor = IRTreeStmGenerator(IRTreeExpGenerator(), memory)
+                val whilstVisitor = IRTreeStmGenerator(IRTreeExpGenerator(memory), memory)
                 val irTree = whilstVisitor.visit(tree)
                 System.out.println(irTree)
                 System.exit(0)
@@ -68,7 +68,7 @@ fun main(args: Array<String>) {
             "-cg" -> {
                 val tree = parser.program()
                 val memory = Memory()
-                val irTreeGenerator = IRTreeStmGenerator(IRTreeExpGenerator(), memory)
+                val irTreeGenerator = IRTreeStmGenerator(IRTreeExpGenerator(memory), memory)
                 val irTree = irTreeGenerator.visit(tree)
                 val outputStream = PrintStream(FileOutputStream("out.ass"))
                 val asmGenerator = JouetteAsmGenerator(outputStream)

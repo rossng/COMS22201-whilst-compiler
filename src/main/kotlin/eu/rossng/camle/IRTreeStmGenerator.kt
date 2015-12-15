@@ -27,4 +27,8 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
     override fun visitStatementWriteLn(ctx: WhilstParser.StatementWriteLnContext): StmNode {
         return StmNode.WriteStr(ExpNode.Const(memory.allocateString("\n")))
     }
+
+    override fun visitStatementAssign(ctx: WhilstParser.StatementAssignContext): StmNode {
+        return StmNode.Move(ExpNode.Mem(ExpNode.Const(memory.allocateOrGetVariable(ctx.ID().text))), expGenerator.visit(ctx.exp()))
+    }
 }

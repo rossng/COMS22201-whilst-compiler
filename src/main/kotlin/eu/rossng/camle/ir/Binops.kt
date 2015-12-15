@@ -1,5 +1,5 @@
 package eu.rossng.camle.ir
 
-public enum class Binop {
+public enum class Binops {
     PLUS, MINUS, MULTIPLY
 }
