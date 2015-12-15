@@ -1,6 +1,7 @@
 package eu.rossng.camle
 
 import java.io.PrintStream
+import java.net.URLEncoder
 import java.util.*
 
 public class Memory {
@@ -51,7 +52,7 @@ public class Memory {
 
     fun dumpAssembly(out: PrintStream) {
         memory.forEach {
-            out.println("DATA " + it.contents.toInt() + " ; " + it.name)
+            out.println("DATA " + it.contents.toInt() + " ; " + URLEncoder.encode(it.name, "UTF-8"))
         }
     }
 

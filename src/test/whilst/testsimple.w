@@ -1,4 +1,1 @@
-x := 15;
-write(x+5);
-write(5);
-write('hi')
+if 1 = 1 & 2 = 2 & 3 = 3 then write(5) else write(10)

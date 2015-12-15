@@ -33,7 +33,7 @@ public abstract class StmNode private constructor() : IRNode {
         }
     }
 
-    class Jump(val exp: ExpNode, val targets: List<Label>) : StmNode() {
+    class Jump(val exp: ExpNode, val targets: List<String>) : StmNode() {
 
         override fun <T> match(a: (Move) -> T, b: (Exp) -> T, c: (Jump) -> T, d: (Cjump) -> T,
                                e: (Seq) -> T, f: (SetLabel) -> T, g: (Nop) -> T,
@@ -43,7 +43,7 @@ public abstract class StmNode private constructor() : IRNode {
     }
 
     class Cjump(val op: BoolOp, val left: ExpNode, val right: ExpNode,
-                val trueTarget: Label, val falseTarget: Label ) : StmNode() {
+                val trueTarget: String, val falseTarget: String ) : StmNode() {
 
         override fun <T> match(a: (Move) -> T, b: (Exp) -> T, c: (Jump) -> T, d: (Cjump) -> T,
                                e: (Seq) -> T, f: (SetLabel) -> T, g: (Nop) -> T,
@@ -61,7 +61,7 @@ public abstract class StmNode private constructor() : IRNode {
         }
     }
 
-    class SetLabel(val label: Label) : StmNode() {
+    class SetLabel(val label: String) : StmNode() {
 
         override fun <T> match(a: (Move) -> T, b: (Exp) -> T, c: (Jump) -> T, d: (Cjump) -> T,
                                e: (Seq) -> T, f: (SetLabel) -> T, g: (Nop) -> T,

@@ -17,7 +17,7 @@ public abstract class ExpNode private constructor() : IRNode {
         }
     }
 
-    class Name(val label: Label) : ExpNode() {
+    class Name(val label: String) : ExpNode() {
         override fun <T> match(a: (Const) -> T, b: (Name) -> T, c: (Temp) -> T,
                                d: (Binop) -> T, e: (Mem) -> T, f: (Eseq) -> T): T {
             return b.invoke(this)

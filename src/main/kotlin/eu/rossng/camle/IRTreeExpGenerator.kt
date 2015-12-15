@@ -23,4 +23,8 @@ internal class IRTreeExpGenerator(val memory: Memory) : WhilstBaseVisitor<ExpNod
         return ExpNode.Mem(ExpNode.Const(memory.allocateOrGetVariable(ctx.text)))
     }
 
+    override fun visitExpBracketed(ctx: WhilstParser.ExpBracketedContext): ExpNode {
+        return visit(ctx.exp())
+    }
+
 }

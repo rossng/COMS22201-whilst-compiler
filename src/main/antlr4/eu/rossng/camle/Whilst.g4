@@ -23,18 +23,19 @@ statement   : ID ASSIGN exp                                                     
             | OPENPAREN statements CLOSEPAREN                                   # StatementStatements
             ;
 
-boolexp     : boolterm ( AND boolterm )*
+boolexp     : boolterm AND boolexp                                              # BoolExpAnd
+            | boolterm                                                          # BoolExpPlain
             ;
 
-boolterm    : NOT bool
-            | bool
+boolterm    : NOT bool                                                          # BoolTermNot
+            | bool                                                              # BoolTermPlain
             ;
 
-bool        : TRUE
-            | FALSE
-            | exp EQUAL exp
-            | exp LEQUAL exp
-            | OPENPAREN boolexp CLOSEPAREN
+bool        : TRUE                                                              # BoolTrue
+            | FALSE                                                             # BoolFalse
+            | exp EQUAL exp                                                     # BoolEq
+            | exp LEQUAL exp                                                    # BoolLeq
+            | OPENPAREN boolexp CLOSEPAREN                                      # BoolBracketed
             ;
 
 exp         : exp TIMES exp                                                     # ExpTimes
