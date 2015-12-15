@@ -4,9 +4,19 @@ import eu.rossng.camle.ir.*
 import java.util.*
 
 internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memory: Memory) : WhilstBaseVisitor<StmNode>() {
-    var numIfElse = 0;
-    var numCondLabels = 0;
+    // Internal state to hack around the fact that ANTLR doesn't support parameterised visitors
+    // Wouldn't it be nice if it were all functional...
+    var ifElseIdProducer = IdProducer();
+    var condLabelIdProducer = IdProducer();
     var ifElseStack = Stack<IfElse>()
+
+    class IdProducer {
+        private var id = 0;
+        fun getNewId(): Int {
+            id++
+            return id
+        }
+    }
 
     data class IfElse(val id: Int, val labelStack: Stack<LabelPair>)
     data class LabelPair(val trueLabel: String, val falseLabel: String)
@@ -40,14 +50,14 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
     }
 
     override fun visitStatementIfThenElse(ctx: WhilstParser.StatementIfThenElseContext): StmNode {
-        numIfElse++
-        val trueBranchLabel = "TB$numIfElse"
-        val falseBranchLabel = "FB$numIfElse"
-        val joinBranchLabel = "J$numIfElse"
+        val id = ifElseIdProducer.getNewId()
+        val trueBranchLabel = "TB$id"
+        val falseBranchLabel = "FB$id"
+        val joinBranchLabel = "J$id"
 
         val labelStack = Stack<LabelPair>()
         labelStack.push(LabelPair(trueBranchLabel, falseBranchLabel))
-        ifElseStack.push(IfElse(numIfElse, labelStack))
+        ifElseStack.push(IfElse(id, labelStack))
 
         val result = StmNode.Seq(
                 visit(ctx.boolexp()),
@@ -79,8 +89,8 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
 
     override fun visitBoolExpAnd(ctx: WhilstParser.BoolExpAndContext): StmNode {
         val currentIfElse = ifElseStack.peek()
-        numCondLabels++
-        val nextConditionLabel = "IF${currentIfElse.id}CND${numCondLabels}" // Can nest inside each if-else block
+        val id = condLabelIdProducer.getNewId()
+        val nextConditionLabel = "IF${currentIfElse.id}CND${id}" // Can nest inside each if-else block
         currentIfElse.labelStack.push(LabelPair(nextConditionLabel, currentIfElse.labelStack.peek().falseLabel))
         val term = visit(ctx.boolterm())
         currentIfElse.labelStack.pop()
