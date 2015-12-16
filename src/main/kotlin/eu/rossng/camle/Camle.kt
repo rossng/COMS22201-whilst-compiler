@@ -16,8 +16,6 @@ fun main(args: Array<String>) {
     println("=============================================================\n")
     var opt = ""
     var inFile = ""
-    val outFile = ""
-    val pos: Int
     if (args.size == 1 && args[0].get(0) != '-') {
         opt = ""
         inFile = args[0]
