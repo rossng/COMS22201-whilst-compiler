@@ -128,6 +128,16 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
         return result
     }
 
+    override fun visitBoolTermNot(ctx: WhilstParser.BoolTermNotContext): StmNode {
+        // Invert the true and false branch labels
+        val currentLabelStack = ifElseStack.peek().labelStack
+        val oldLabels = currentLabelStack.pop()
+        currentLabelStack.push(LabelPair(oldLabels.falseLabel, oldLabels.trueLabel))
+
+        // Process the bool
+        return visit(ctx.bool())
+    }
+
     override fun visitBoolTermPlain(ctx: WhilstParser.BoolTermPlainContext): StmNode {
         return visit(ctx.bool())
     }
