@@ -4,12 +4,17 @@ A port of the University of Bristol CAMLE (Compiler to Abstract Machine for Lang
 
 The original CAMLE is a skeleton compiler built on ANTLRv3, and is located in the `uk.ac.bris.cs.camle` package. It contains an incomplete implementation of a language which I'll call *Whilst*. *Whilst* is based on the *While* language from *Principles of Program Analysis* (Nielson, Nielson and Hankin).
 
-I have re-implemented the compiler with ANTLR4 in the `eu.rossng.camle` package. The aims of my implementation were to:
+I have used ANTLR4 and Kotlin to re-implement the compiler. This is in the `eu.rossng.camle` package. The aims of my implementation were to:
 
 * Minimise complexity (e.g. embedded Java in the ANTLR grammar, functions with side effects)
 * Represent the IR tree in a typesafe manner, using classes to represent different kinds of nodes and dispatching methods based on those types (rather than switching on `instanceof` or tokens)
 * Use a 'functional' style for as much of the code as possible
     * It turns out that this is very difficult with ANTLR, which does not allow you to inject custom dependencies into your visitor methods (all you get it the `WhilstParser.<Something>Context` object)
+    * It has become clear that doing this properly requires a language with proper ADTs and pattern matching
+    * Because Java/Kotlin don't have these (or the right kind of dynamic dispatch), it's difficult even when you control the implementation of the tree
+        * ANTLR uses the Visitor pattern (i.e. double-dispatch) to get around this
+        * My IR tree implementation takes inspiration from [this article](https://apocalisp.wordpress.com/2009/08/21/structural-pattern-matching-in-java/) about emulating ADTs in Java. I've updated this approach by using lambdas to make it more terse.
+            * But it's not ideal - keeping the interface implementation up to date is fiddly
 * Learn [Kotlin](https://kotlinlang.org/) by using it for all the compiler code
     * It's really good!
 
@@ -28,7 +33,7 @@ The wrapper will download Maven, ANTLR and the Kotlin compiler for you.
 Once packaged, you can test the compiler skeleton by running:
 
 ```
- java -jar target/antlr3-camle-jar-with-dependencies.jar -lex src/test/while/testsk.w
+ java -jar target/antlr3-camle-jar-with-dependencies.jar -lex src/test/whilst/testsk.w
 ```
 
 This executes the `uk.ac.bris.cs.eu.rossng.camle.Camle` class, asking it to lex the `testsk.w` test program. The subset of the language in `testsk.w` *is* implemented already, so this will output something like:
@@ -55,7 +60,7 @@ You can also supply other flags - `-syn` and `-irt`.
 Once packaged, you can test the main compiler by running:
 
 ```
-java -jar target/antlr4-camle-jar-with-dependencies.jar -cg "src/test/while/test7.w"
+java -jar target/antlr4-camle-jar-with-dependencies.jar -cg "src/test/whilst/test7.w"
 ```
 
 This executes the `main` method in `eu.rossng.camle`, asking it to generate code for the `test7.w` test program. This program is designed to use all of the language's features.
