@@ -17,6 +17,8 @@ I have used ANTLR4 and Kotlin to re-implement the compiler. This is in the `eu.r
             * But it's not ideal - keeping the interface implementation up to date is fiddly
 * Learn [Kotlin](https://kotlinlang.org/) by using it for all the compiler code
     * It's really good!
+    
+Both compilers produce assembly for a modified version of the *Jouette* architecture described in *Modern Compiler Implementation in Java* (Appel).
 
 ## Using the compiler
 
@@ -64,3 +66,15 @@ java -jar target/antlr4-camle-jar-with-dependencies.jar -cg "src/test/whilst/tes
 ```
 
 This executes the `main` method in `eu.rossng.camle`, asking it to generate code for the `test7.w` test program. This program is designed to use all of the language's features.
+
+The output is written to the file `/out.ass`.
+
+## Executing the assembly
+
+The assembly produced by the compilers can be executed using the `assmule` program. This is included as a binary (the source code is not available), tested with CentOS 6.7. To make it easier to test on any platform, you can use Vagrant. With vagrant installed, simply run `vagrant up` to create a CentOS VM, then `vagrant ssh` to connect to it. `cd` to the `/vagrant` directory, where you will find the `assmule` binary. You can use it as follows:
+
+```
+./assmule out.ass
+```
+
+(where `out.ass` is the Jouette ASM file you want to assemble and execute)
