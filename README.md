@@ -67,7 +67,7 @@ java -jar target/antlr4-camle-jar-with-dependencies.jar -cg "src/test/whilst/tes
 
 This executes the `main` method in `eu.rossng.camle`, asking it to generate code for the `test7.w` test program. This program is designed to use all of the language's features.
 
-The output is written to the file `/out.ass`.
+The output is written to the file `/test7.ass` (the output name will always match the input filename).
 
 ## Executing the assembly
 

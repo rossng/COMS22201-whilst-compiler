@@ -3,6 +3,7 @@ package eu.rossng.camle
 import org.antlr.v4.runtime.ANTLRFileStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Token
+import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.io.PrintStream
@@ -68,7 +69,8 @@ fun main(args: Array<String>) {
                 val memory = Memory()
                 val irTreeGenerator = IRTreeStmGenerator(IRTreeExpGenerator(memory), memory)
                 val irTree = irTreeGenerator.visit(tree)
-                val outputStream = PrintStream(FileOutputStream("out.ass"))
+
+                val outputStream = PrintStream(FileOutputStream("${File(inFile).nameWithoutExtension}.ass"))
                 val asmGenerator = JouetteAsmGenerator(outputStream)
                 asmGenerator.invoke(irTree, memory)
                 outputStream.close()
