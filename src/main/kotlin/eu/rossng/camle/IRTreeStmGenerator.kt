@@ -37,12 +37,50 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
         return StmNode.Write(expGenerator.visit(ctx.exp()))
     }
 
+    override fun visitStatementWriteBoolExp(ctx: WhilstParser.StatementWriteBoolExpContext): StmNode {
+        val id = conditionalBlockIdProducer.getNewId()
+        val trueBranchLabel = "TB$id"
+        val falseBranchLabel = "FB$id"
+        val joinBranchLabel = "J$id"
+
+        val labelStack = Stack<LabelPair>()
+        labelStack.push(LabelPair(trueBranchLabel, falseBranchLabel))
+        conditionalBlockStack.push(IfElse(id, labelStack))
+
+        val result = StmNode.Seq(
+                visit(ctx.boolexp()),
+                StmNode.Seq(
+                        StmNode.SetLabel(trueBranchLabel),
+                        StmNode.Seq(
+                                StmNode.WriteStr(ExpNode.Mem(ExpNode.Const(memory.allocateOrGetString("true")))),
+                                StmNode.Seq(
+                                        StmNode.Jump(ExpNode.Const(0), arrayListOf(joinBranchLabel)),
+                                        StmNode.Seq(
+                                                StmNode.SetLabel(falseBranchLabel),
+                                                StmNode.Seq(
+                                                        StmNode.WriteStr(ExpNode.Mem(ExpNode.Const(memory.allocateOrGetString("false")))),
+                                                        StmNode.Seq(
+                                                                StmNode.Jump(ExpNode.Const(0), arrayListOf(joinBranchLabel)),
+                                                                StmNode.SetLabel(joinBranchLabel)
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        )
+
+        conditionalBlockStack.pop()
+
+        return result
+    }
+
     override fun visitStatementWriteString(ctx: WhilstParser.StatementWriteStringContext): StmNode {
-        return StmNode.WriteStr(ExpNode.Const(memory.allocateString(ctx.STRING().text.substring(1, ctx.STRING().text.lastIndex))))
+        return StmNode.WriteStr(ExpNode.Const(memory.allocateOrGetString(ctx.STRING().text.substring(1, ctx.STRING().text.lastIndex))))
     }
 
     override fun visitStatementWriteLn(ctx: WhilstParser.StatementWriteLnContext): StmNode {
-        return StmNode.WriteStr(ExpNode.Const(memory.allocateString("\n")))
+        return StmNode.WriteStr(ExpNode.Const(memory.allocateOrGetString("\n")))
     }
 
     override fun visitStatementAssign(ctx: WhilstParser.StatementAssignContext): StmNode {

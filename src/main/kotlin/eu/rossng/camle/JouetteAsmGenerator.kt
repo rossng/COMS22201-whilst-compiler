@@ -4,10 +4,29 @@ import eu.rossng.camle.ir.*
 import java.io.PrintStream
 
 class JouetteAsmGenerator(val out: PrintStream) {
+    /**
+     * Write the Jouette ASM for a supplied IR tree to the output stream
+     * @property stmNode The IR tree to be converted to ASM
+     * @property memory Information about how memory is allocated
+     */
     fun invoke(stmNode: StmNode, memory: Memory) {
+        // Make sure that R0 actually equals 0
         out.println("XOR R0,R0,R0")
+
+        // Convert the IR Tree to assembly
         generateStm(stmNode, 1)
+
+        // End the program section
         out.println("HALT")
+
+        // Begin the data section
+
+        // Pre-allocate some commonly-used strings
+        memory.allocateOrGetString("\n")
+        memory.allocateOrGetString("true")
+        memory.allocateOrGetString("false")
+
+        // Write out the contents of the pre-allocated memory
         memory.dumpAssembly(out)
     }
 

@@ -9,7 +9,7 @@ class MemoryTest {
     @Test
     fun testMemory() {
         val m = Memory()
-        m.allocateString("hi")
+        m.allocateOrGetString("hi")
 
         val o = ByteArrayOutputStream()
         val p = PrintStream(o)
