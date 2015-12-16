@@ -71,10 +71,15 @@ The output is written to the file `/out.ass`.
 
 ## Executing the assembly
 
-The assembly produced by the compilers can be executed using the `assmule` program. This is included as a binary (the source code is not available), tested with CentOS 6.7. To make it easier to test on any platform, you can use Vagrant. With vagrant installed, simply run `vagrant up` to create a CentOS VM, then `vagrant ssh` to connect to it. `cd` to the `/vagrant` directory, where you will find the `assmule` binary. You can use it as follows:
+The assembly produced by the compilers can be executed using the `assmule` program. This is included as a binary (the source code is not available), tested with CentOS 6.7. To make it easier to test on any platform, you can use Vagrant. With Vagrant installed, simply run `vagrant up` to create a CentOS VM, then `vagrant ssh` to connect to it. `cd` to the `/vagrant` directory, where you will find the `assmule` binary. You can use it as follows:
 
 ```
 ./assmule out.ass
 ```
 
 (where `out.ass` is the Jouette ASM file you want to assemble and execute)
+
+## Future
+
+* Implement optimisations (register allocation, fewer instructions)
+* Re-implement in a functional language (OCaml? Haskell?)
