@@ -2,7 +2,16 @@
 
 A port of the University of Bristol CAMLE (Compiler to Abstract Machine for Language Engineering) to a standard Maven project format.
 
-CAMLE is a skeleton compiler using ANTLRv3. It is meant to compile a language, which we'll call *Whilst*, but incomplete. *Whilst* is based on the *While* language from *Principles of Program Analysis* (Nielson, Nielson and Hankin).
+The original CAMLE is a skeleton compiler built on ANTLRv3, and is located in the `uk.ac.bris.cs.camle` package. It contains an incomplete implementation of a language which I'll call *Whilst*. *Whilst* is based on the *While* language from *Principles of Program Analysis* (Nielson, Nielson and Hankin).
+
+I have re-implemented the compiler with ANTLR4 in the `eu.rossng.camle` package. The aims of my implementation were to:
+
+* Minimise complexity (e.g. embedded Java in the ANTLR grammar, functions with side effects)
+* Represent the IR tree in a typesafe manner, using classes to represent different kinds of nodes and dispatching methods based on those types (rather than switching on `instanceof` or tokens)
+* Use a 'functional' style for as much of the code as possible
+    * It turns out that this is very difficult with ANTLR, which does not allow you to inject custom dependencies into your visitor methods (all you get it the `WhilstParser.<Something>Context` object)
+* Learn [Kotlin](https://kotlinlang.org/) by using it for all the compiler code
+    * It's really good!
 
 ## Using the compiler
 
@@ -12,7 +21,9 @@ To run the compiler, you will first need to package it using Maven. A Maven wrap
 ./mvnw package
 ```
 
-And the wrapper will do everything for you. There is no need to install Maven or ANTLR globally.
+The wrapper will download Maven, ANTLR and the Kotlin compiler for you.
+
+### Skeleton compiler
 
 Once packaged, you can test the compiler skeleton by running:
 
@@ -39,12 +50,12 @@ This executes the `uk.ac.bris.cs.eu.rossng.camle.Camle` class, asking it to lex 
 
 You can also supply other flags - `-syn` and `-irt`.
 
-When completed, the compiler should be able to lex, parse and compile `test0.w`.
+### Implemented compiler
 
-## Future development
-
-I am currently updating the skeleton to use ANTLR4 - you can try a basic version with
+Once packaged, you can test the main compiler by running:
 
 ```
- java -jar target/antlr4-camle-jar-with-dependencies.jar -syn src/test/while/testsk.w
+java -jar target/antlr4-camle-jar-with-dependencies.jar -cg "src/test/while/test7.w"
 ```
+
+This executes the `main` method in `eu.rossng.camle`, asking it to generate code for the `test7.w` test program. This program is designed to use all of the language's features.
