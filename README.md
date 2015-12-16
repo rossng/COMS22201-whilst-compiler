@@ -79,6 +79,8 @@ The assembly produced by the compilers can be executed using the `assmule` progr
 
 (where `out.ass` is the Jouette ASM file you want to assemble and execute)
 
+For more information on the Jouette assembly, see `/docs/JouetteArchitecture.md`
+
 ## Future
 
 * Implement optimisations (register allocation, fewer instructions)
