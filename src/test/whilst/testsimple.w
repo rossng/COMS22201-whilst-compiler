@@ -1,6 +1,3 @@
-if 1 = 1 & (2 = 2 & 3 = 3) & true
-    then
-        if 1 = 1 & (2 = 2 & 3 = 3) & true
-            then write(1)
-            else write(2)
-    else write(3)
+x := 1;
+while x <= 5
+do (write(x); x := x+2; skip)

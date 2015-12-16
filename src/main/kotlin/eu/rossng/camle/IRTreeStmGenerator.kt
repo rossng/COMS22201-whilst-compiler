@@ -6,9 +6,9 @@ import java.util.*
 internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memory: Memory) : WhilstBaseVisitor<StmNode>() {
     // Internal state to hack around the fact that ANTLR doesn't support parameterised visitors
     // Wouldn't it be nice if it were all functional...
-    var ifElseIdProducer = IdProducer();
+    var conditionalBlockIdProducer = IdProducer();
     var condLabelIdProducer = IdProducer();
-    var ifElseStack = Stack<IfElse>()
+    var conditionalBlockStack = Stack<IfElse>()
 
     class IdProducer {
         private var id = 0;
@@ -46,21 +46,39 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
     }
 
     override fun visitStatementAssign(ctx: WhilstParser.StatementAssignContext): StmNode {
-        return StmNode.Move(ExpNode.Mem(ExpNode.Const(memory.allocateOrGetVariable(ctx.ID().text))), expGenerator.visit(ctx.exp()))
+        return StmNode.Move(
+                ExpNode.Mem(ExpNode.Const(memory.allocateOrGetVariable(ctx.ID().text))),
+                expGenerator.visit(ctx.exp())
+        )
+    }
+
+    override fun visitStatementRead(ctx: WhilstParser.StatementReadContext): StmNode {
+        return StmNode.Move(
+                ExpNode.Mem(ExpNode.Const(memory.allocateOrGetVariable(ctx.ID().text))),
+                ExpNode.Read()
+        )
+    }
+
+    override fun visitStatementStatements(ctx: WhilstParser.StatementStatementsContext): StmNode {
+        return visit(ctx.statements())
+    }
+
+    override fun visitStatementSkip(ctx: WhilstParser.StatementSkipContext): StmNode {
+        return StmNode.Nop()
     }
 
     override fun visitStatementIfThenElse(ctx: WhilstParser.StatementIfThenElseContext): StmNode {
 
         // Save the information about this IfElse block to the stack, so that its immediate children can find the labels
         // they need to refer to etc.
-        val id = ifElseIdProducer.getNewId()
+        val id = conditionalBlockIdProducer.getNewId()
         val trueBranchLabel = "TB$id"
         val falseBranchLabel = "FB$id"
         val joinBranchLabel = "J$id"
 
         val labelStack = Stack<LabelPair>()
         labelStack.push(LabelPair(trueBranchLabel, falseBranchLabel))
-        ifElseStack.push(IfElse(id, labelStack))
+        conditionalBlockStack.push(IfElse(id, labelStack))
 
         // Produce the IfElse block
         val result = StmNode.Seq(
@@ -87,14 +105,52 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
         )
 
         // Now we're finished producing this IfElse block, pop it off the stack
-        ifElseStack.pop()
+        conditionalBlockStack.pop()
+
+        return result
+    }
+
+    override fun visitStatementWhile(ctx: WhilstParser.StatementWhileContext): StmNode {
+
+        // Save the information about this IfElse block to the stack, so that its immediate children can find the labels
+        // they need to refer to etc.
+        val id = conditionalBlockIdProducer.getNewId()
+        val trueBranchLabel = "TB$id"
+        val falseBranchLabel = "FB$id"
+        val conditionLabel = "WC$id"
+
+        val labelStack = Stack<LabelPair>()
+        labelStack.push(LabelPair(trueBranchLabel, falseBranchLabel))
+        conditionalBlockStack.push(IfElse(id, labelStack))
+
+        // Produce the While block
+        // condition label, condition test, true label, statement, jump to condition label, false label
+        val result = StmNode.Seq(
+                StmNode.SetLabel(conditionLabel),
+                StmNode.Seq(
+                    visit(ctx.boolexp()),
+                    StmNode.Seq(
+                            StmNode.SetLabel(trueBranchLabel),
+                            StmNode.Seq(
+                                    visit(ctx.statement()),
+                                    StmNode.Seq(
+                                            StmNode.Jump(ExpNode.Const(0), arrayListOf(conditionLabel)),
+                                            StmNode.SetLabel(falseBranchLabel)
+                                    )
+                            )
+                    )
+                )
+        )
+
+        // Now we're finished producing this While block, pop it off the stack
+        conditionalBlockStack.pop()
 
         return result
     }
 
     override fun visitBoolExpAnd(ctx: WhilstParser.BoolExpAndContext): StmNode {
         // Retrieve the IfElse statement in which this boolean expression is being used
-        val currentIfElse = ifElseStack.peek()
+        val currentIfElse = conditionalBlockStack.peek()
 
         // As this is a (boolterm AND boolexp), generate a label for jumping to the boolexp if the boolterm is true
         val id = condLabelIdProducer.getNewId()
@@ -119,7 +175,7 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
     }
 
     override fun visitBoolExpPlain(ctx: WhilstParser.BoolExpPlainContext): StmNode {
-        val currentIfElse = ifElseStack.peek()
+        val currentIfElse = conditionalBlockStack.peek()
         currentIfElse.labelStack.push(
                 LabelPair(currentIfElse.labelStack.peek().trueLabel, currentIfElse.labelStack.peek().falseLabel)
         )
@@ -130,7 +186,7 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
 
     override fun visitBoolTermNot(ctx: WhilstParser.BoolTermNotContext): StmNode {
         // Invert the true and false branch labels
-        val currentLabelStack = ifElseStack.peek().labelStack
+        val currentLabelStack = conditionalBlockStack.peek().labelStack
         val oldLabels = currentLabelStack.pop()
         currentLabelStack.push(LabelPair(oldLabels.falseLabel, oldLabels.trueLabel))
 
@@ -143,22 +199,22 @@ internal class IRTreeStmGenerator(val expGenerator: IRTreeExpGenerator, val memo
     }
 
     override fun visitBoolTrue(ctx: WhilstParser.BoolTrueContext): StmNode {
-        return StmNode.Jump(ExpNode.Const(0), arrayListOf(ifElseStack.peek().labelStack.peek().trueLabel))
+        return StmNode.Jump(ExpNode.Const(0), arrayListOf(conditionalBlockStack.peek().labelStack.peek().trueLabel))
     }
 
     override fun visitBoolFalse(ctx: WhilstParser.BoolFalseContext): StmNode {
-        return StmNode.Jump(ExpNode.Const(0), arrayListOf(ifElseStack.peek().labelStack.peek().falseLabel))
+        return StmNode.Jump(ExpNode.Const(0), arrayListOf(conditionalBlockStack.peek().labelStack.peek().falseLabel))
     }
 
     override fun visitBoolEq(ctx: WhilstParser.BoolEqContext): StmNode {
-        val labels = ifElseStack.peek().labelStack.peek()
+        val labels = conditionalBlockStack.peek().labelStack.peek()
         return StmNode.Cjump(
                 BoolOp.EQ, expGenerator.visit(ctx.exp(0)), expGenerator.visit(ctx.exp(1)),
                 labels.trueLabel, labels.falseLabel)
     }
 
     override fun visitBoolLeq(ctx: WhilstParser.BoolLeqContext): StmNode {
-        val labels = ifElseStack.peek().labelStack.peek()
+        val labels = conditionalBlockStack.peek().labelStack.peek()
         return StmNode.Cjump(
                 BoolOp.LE, expGenerator.visit(ctx.exp(0)), expGenerator.visit(ctx.exp(1)),
                 labels.trueLabel, labels.falseLabel

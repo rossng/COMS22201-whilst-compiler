@@ -28,12 +28,13 @@ class JouetteAsmGenerator(val out: PrintStream) {
     fun generateExp(expNode: ExpNode, reg: Int): Int {
         var nextReg: Int = reg
         expNode.match(
-            { nextReg = generateConst(it, reg) },
-            { nextReg = generateName(it, reg) },
-            { nextReg = generateTemp(it, reg) },
-            { nextReg = generateBinop(it, reg) },
-            { nextReg = generateMem(it, reg) },
-            { nextReg = generateEseq(it, reg) }
+                { nextReg = generateConst(it, reg) },
+                { nextReg = generateName(it, reg) },
+                { nextReg = generateTemp(it, reg) },
+                { nextReg = generateBinop(it, reg) },
+                { nextReg = generateMem(it, reg) },
+                { nextReg = generateEseq(it, reg) },
+                { nextReg = generateRead(it, reg) }
         )
         return nextReg
     }
@@ -45,6 +46,7 @@ class JouetteAsmGenerator(val out: PrintStream) {
                 { -1 },
                 { -1 },
                 { evaluateMem(it) },
+                { -1 },
                 { -1 }
         )
     }
@@ -105,6 +107,8 @@ class JouetteAsmGenerator(val out: PrintStream) {
         out.println("WRS " + evaluateExp(writeStr.addr))
     }
 
+    ///////////
+
     fun generateConst(const: ExpNode.Const, nextReg: Int): Int {
         out.println("ADDI R$nextReg,R0,${const.value}; nextReg $nextReg")
         return nextReg + 1
@@ -153,6 +157,13 @@ class JouetteAsmGenerator(val out: PrintStream) {
     fun generateEseq(eseq: ExpNode.Eseq, reg: Int): Int {
         return -1
     }
+
+    fun generateRead(read: ExpNode.Read, nextReg: Int): Int {
+        out.println("RD R$nextReg")
+        return nextReg + 1
+    }
+
+    ///////////
 
     fun evaluateConst(const: ExpNode.Const): Int {
         return const.value
