@@ -1,0 +1,3 @@
+camle text eol=lf
+mvnw text eol=lf
+assmule -diff
