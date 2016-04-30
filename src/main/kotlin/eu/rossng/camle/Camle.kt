@@ -13,9 +13,9 @@ import java.io.PrintStream
  * A compiler for the Whilst language, built for COMS22201 at the University of Bristol.
  */
 fun main(args: Array<String>) {
-    println("\n=============================================================")
-    println("CAMLE - Compiler to Abstract Machine for Language Engineering")
-    println("=============================================================\n")
+    //println("\n=============================================================")
+    //println("CAMLE - Compiler to Abstract Machine for Language Engineering")
+    //println("=============================================================\n")
     var opt = ""
     var inFile = ""
     if (args.size == 1 && args[0].get(0) != '-') {
