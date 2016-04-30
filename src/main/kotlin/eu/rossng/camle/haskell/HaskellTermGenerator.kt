@@ -45,7 +45,7 @@ class HaskellStmGenerator(val aexpGenerator: HaskellAexpGenerator, val bexpGener
     }
 
     override fun visitStatementWriteString(ctx: WhilstParser.StatementWriteStringContext?): Stm? {
-        return Stm.WriteS(ctx!!.STRING().text.slice(1..(ctx.STRING().text.length - 1)))
+        return Stm.WriteS(ctx!!.STRING().text.slice(1..(ctx.STRING().text.length - 2)))
     }
 
     override fun visitStatementWriteLn(ctx: WhilstParser.StatementWriteLnContext?): Stm? {
