@@ -18,7 +18,7 @@ statement   : ID ASSIGN exp                                                     
             | WRITE OPENPAREN ( exp ) CLOSEPAREN                                # StatementWriteExp
             | WRITE OPENPAREN ( boolexp ) CLOSEPAREN                            # StatementWriteBoolExp
             | WRITE OPENPAREN ( STRING ) CLOSEPAREN                             # StatementWriteString
-            | WRITE OPENPAREN ( ID ) CLOSEPAREN                                 # StatementWriteId
+//          | WRITE OPENPAREN ( ID ) CLOSEPAREN                                 # StatementWriteId
             | WRITELN                                                           # StatementWriteLn
             | OPENPAREN statements CLOSEPAREN                                   # StatementStatements
             ;

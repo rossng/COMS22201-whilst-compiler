@@ -1,5 +1,6 @@
 package eu.rossng.camle
 
+import eu.rossng.camle.haskell.*
 import org.antlr.v4.runtime.ANTLRFileStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Token
@@ -54,6 +55,13 @@ fun main(args: Array<String>) {
             "-syn" -> {
                 val tree = parser.program()
                 println(tree.toStringTree(parser))
+                System.exit(0)
+            }
+            "-hs" -> {
+                val tree = parser.program()
+                val hsVisitor = HaskellStmGenerator(HaskellAexpGenerator(), HaskellBexpGenerator(HaskellAexpGenerator()))
+                var hsTerm = hsVisitor.visit(tree)
+                System.out.println(show(hsTerm))
                 System.exit(0)
             }
             "-irt" -> {
